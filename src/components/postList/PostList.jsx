@@ -1,9 +1,10 @@
 import styles from "./PostList.module.css";
 import Post from "../post/Post";
 import NewPost from "../newPost/NewPost";
+import Modal from "../modal/Modal";
 import { useState } from "react";
 
-const PostList = () => {
+const PostList = ({ modalVisibility, onCloseModal }) => {
   const [userText, setUserText] = useState("");
   const [author, setAuthor] = useState("");
 
@@ -14,14 +15,18 @@ const PostList = () => {
   const changeAuthorHandler = (event) => {
     setAuthor(event.target.value);
   };
+
   return (
     <>
-      <Modal>
-        <NewPost
-          onBodyChange={changeBodyHandler}
-          onAutorChange={changeAuthorHandler}
-        />
-      </Modal>
+      {modalVisibility && (
+        <Modal closeModal={onCloseModal}>
+          <NewPost
+            onBodyChange={changeBodyHandler}
+            onAutorChange={changeAuthorHandler}
+          />
+        </Modal>
+      )}
+
       <ul className={styles.posts}>
         <Post author={author} body={userText} />
         <Post author="Paola" body="I need new eye liners" />
