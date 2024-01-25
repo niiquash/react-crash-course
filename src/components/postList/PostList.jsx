@@ -5,34 +5,30 @@ import Modal from "../modal/Modal";
 import { useState } from "react";
 
 const PostList = ({ modalVisibility, onCloseModal }) => {
-  const [userText, setUserText] = useState("");
-  const [author, setAuthor] = useState("");
+  const [posts, setPosts] = useState([]);
 
-  const changeBodyHandler = (event) => {
-    setUserText(event.target.value);
+  const addPostHandler = (postData) => {
+    setPosts((exisitingPosts) => [postData, ...exisitingPosts]);
   };
-
-  const changeAuthorHandler = (event) => {
-    setAuthor(event.target.value);
-  };
-
   return (
     <>
       {modalVisibility && (
         <Modal closeModal={onCloseModal}>
-          <NewPost
-            onBodyChange={changeBodyHandler}
-            onAutorChange={changeAuthorHandler}
-          />
+          <NewPost onCancel={onCloseModal} onAddPost={addPostHandler} />
         </Modal>
       )}
-
-      <ul className={styles.posts}>
-        <Post author={author} body={userText} />
-        <Post author="Paola" body="I need new eye liners" />
-        <Post author="Alma" body="J'ai faime" />
-        <Post author="Aaron" body="I'm super smart" />
-      </ul>
+      {posts.length > 0 ? (
+        <ul className={styles.posts}>
+          {posts.map((post, index) => (
+            <Post key={index} author={post.author} body={post.body} />
+          ))}
+        </ul>
+      ) : (
+        <div style={{ textAlign: "center", color: "white" }}>
+          <h2>There are no posts yet.</h2>
+          <p>Start adding posts</p>
+        </div>
+      )}
     </>
   );
 };
